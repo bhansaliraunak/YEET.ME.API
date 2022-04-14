@@ -1,7 +1,6 @@
 const router = require("express").Router(),
   vendor_controller = require("./controllers/vendor.controller"),
-  auth = require("./auth"),
-  passport = require("passport");
+  auth = require("./auth");
 
 router.post(
   "/googleOAuth",

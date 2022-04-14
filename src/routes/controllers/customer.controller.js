@@ -7,6 +7,31 @@ const passport = require("passport"),
 
 require("dotenv").config();
 
+exports.googleOAuthorization = (req, res, next) => {
+  const {
+    body: { customer },
+  } = req;
+
+  Customer.findOne({ email: customer.email })
+    .exec()
+    .then((data) => {
+      if (data) {
+        return res.status(200).json({ customer: data.toAuthJSON() });
+      } else {
+        const createCustomer = new Customer(customer);
+        createCustomer
+          .save()
+          .then(() => {
+            return res
+              .status(201)
+              .json({ customer: createCustomer.toAuthJSON() });
+          })
+          .catch((err) => next(err));
+      }
+    })
+    .catch((error) => next(error));
+};
+
 exports.register = async (req, res, next) => {
   const {
     body: { customer },
@@ -38,11 +63,11 @@ exports.register = async (req, res, next) => {
       await createCustomer.setPassword(customer.password, async (cb) => {
         if (cb.success === constants.SUCCESS) {
           createCustomer.set("password", cb.hash);
-          await Society.findById(customer.society, (err, data) => {
-            if (data) {
-              createCustomer.society = data;
-            }
-          });
+          // await Society.findById(customer.society, (err, data) => {
+          //   if (data) {
+          //     createCustomer.society = data;
+          //   }
+          // });
           return await createCustomer
             .save()
             .then(() =>
