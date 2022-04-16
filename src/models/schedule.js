@@ -28,6 +28,10 @@ let CarWashScheduleSchema = new Schema(
         type: String,
         default: "#ff00a2",
       },
+      secondary: {
+        type: String,
+        default: "#ff00a2",
+      },
     },
     resizable: {
       beforeStart: {

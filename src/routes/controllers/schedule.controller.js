@@ -12,6 +12,10 @@ exports.createCarWashSchedule = async (req, res, next) => {
   await Vendor.findById(schedule.vendor, (err, data) => {
     createSchedule.vendor = data;
   });
+
+  // await Customer.collection.dropIndex("email");
+  // await Customer.collection.createIndex("email");
+
   await Customer.findById(schedule.customer, (err, data) => {
     createSchedule.customer = data;
   });

@@ -27,9 +27,6 @@ let VendorSchema = new Schema(
     email: {
       type: String,
       required: true,
-      unique: true,
-      index: true,
-      sparse: true,
     },
     email_is_verified: {
       type: Boolean,
@@ -38,14 +35,10 @@ let VendorSchema = new Schema(
     firstName: {
       type: String,
       required: true,
-      index: true,
-      sparse: true,
     },
     lastName: {
       type: String,
       required: true,
-      index: true,
-      sparse: true,
     },
     // businessName: {
     //   type: String,
@@ -58,8 +51,6 @@ let VendorSchema = new Schema(
     image: {
       url: String,
       type: String,
-      index: true,
-      sparse: true,
     },
     // product: [
     //   {
@@ -78,10 +69,8 @@ let VendorSchema = new Schema(
     mobile: {
       type: Number,
       required: false,
-      unique: true,
+
       maxlength: 10,
-      index: true,
-      sparse: true,
     },
     // paymentNumber: {
     //   type: Number,
@@ -95,22 +84,16 @@ let VendorSchema = new Schema(
     whatsapp: {
       type: Number,
       required: false,
-      unique: true,
-      index: true,
-      sparse: true,
+
       maxlength: 10,
     },
     carName: {
       type: String,
       required: false,
-      index: true,
-      sparse: true,
     },
     carType: {
       type: String,
       required: false,
-      index: true,
-      sparse: true,
     },
     isProfileCompleted: {
       type: Boolean,

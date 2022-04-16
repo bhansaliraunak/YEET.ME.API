@@ -30,9 +30,8 @@ let CustomerSchema = new Schema(
     email: {
       type: String,
       required: true,
-      unique: true,
-      index: true,
       sparse: true,
+      dropDups: true,
     },
     email_is_verified: {
       type: Boolean,
@@ -45,20 +44,14 @@ let CustomerSchema = new Schema(
     firstName: {
       type: String,
       required: true,
-      index: true,
-      sparse: true,
     },
     lastName: {
       type: String,
       required: true,
-      index: true,
-      sparse: true,
     },
     image: {
       url: String,
       type: String,
-      index: true,
-      sparse: true,
     },
     // slug: {
     //   type: String,
@@ -83,30 +76,20 @@ let CustomerSchema = new Schema(
     mobile: {
       type: Number,
       required: false,
-      unique: true,
-      index: true,
-      sparse: true,
       maxlength: 10,
     },
     whatsapp: {
       type: Number,
       required: false,
-      unique: true,
-      index: true,
-      sparse: true,
       maxlength: 10,
     },
     carName: {
       type: String,
       required: false,
-      index: true,
-      sparse: true,
     },
     carType: {
       type: String,
       required: false,
-      index: true,
-      sparse: true,
     },
     isProfileCompleted: {
       type: Boolean,
@@ -135,7 +118,7 @@ let CustomerSchema = new Schema(
   }
 );
 
-CustomerSchema.plugin(passportLocalMongoose);
+// CustomerSchema.plugin(passportLocalMongoose);
 
 CustomerSchema.methods.setPassword = async (password, callback) => {
   // this.salt = crypto.randomBytes(16).toString('hex');
@@ -232,6 +215,7 @@ CustomerSchema.methods.toAuthJSON = function () {
     email: this.email,
     firstName: this.firstName,
     lastName: this.lastName,
+    carName: this.carName,
     image: this.image,
     city: this.city,
     state: this.state,
