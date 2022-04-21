@@ -45,7 +45,7 @@ let CarWashScheduleSchema = new Schema(
     },
     draggable: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     meta: {
       location: {
@@ -68,6 +68,24 @@ let CarWashScheduleSchema = new Schema(
         type: Date,
         default: Date.now,
       },
+    },
+    vendor_status: {
+      name: {
+        type: String,
+        default: "ACCEPT",
+      },
+      color: {
+        type: String,
+        default: "#ff00a2",
+      },
+      date: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+    shared_status: {
+      type: String,
+      default: "Awaiting Confirmation from Washer",
     },
   },
   {
