@@ -34,7 +34,7 @@
     "password-generator": "^2.3.2",
     "pubsub-js": "^1.8.0",
     "pug": "^3.0.0",
-    "redis": "^3.0.2",
+    "redis": "^3.1.1",
     "request": "^2.88.2",
     "response-time": "^2.3.2",
     "save": "^2.4.0",
