@@ -84,27 +84,15 @@ exports.sendFeedback = (req, res, next) => {
     body: { vendor },
   } = req;
 
-  console.log("ENTEREEEDDD FEEDBACK!!!", vendor);
+  // console.log("ENTEREEEDDD FEEDBACK!!!", vendor);
 
-  const emailTemplate = new Email({
-      preview: false,
-      // uncomment below to send emails in development/test env:
-      // send: true
-      send: false,
-    }),
-    transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      secureConnection: false,
-      port: 25,
-      tls: {
-        ciphers: "SSLv3",
-      },
-      requireTLS: true,
-      auth: {
-        user: "rishimehta365@gmail.com",
-        pass: "puppisinghji",
-      },
-    });
+  let transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "rishimehta365@gmail.com",
+      pass: "puppisinghji",
+    },
+  });
 
   const mailOptions = {
     from: vendor.email, // sender address

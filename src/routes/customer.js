@@ -7,6 +7,11 @@ var guard = require("express-jwt-permissions")({
   permissionsProperty: "scope",
 });
 
+router.post(
+  "/googleOAuth",
+  auth.optional,
+  customer_controller.googleOAuthorization
+);
 router.get("/", auth.required, customer_controller.getAllCustomers);
 
 router.post("/login", auth.optional, customer_controller.login);

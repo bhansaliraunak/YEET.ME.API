@@ -48,5 +48,5 @@ let OrderSchema = new Schema(
   }
 );
 
-var Orders = mongoose.model("Order", OrderSchema);
+var Orders = mongoose.model("Order", OrderSchema).syncIndexes();
 module.exports = Orders;

@@ -5,6 +5,8 @@ let SocietySchema = new Schema({
   name: {
     type: String,
     unique: true,
+    index: true,
+    sparse: true,
   },
   description: {
     type: String,

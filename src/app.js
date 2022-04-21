@@ -22,6 +22,7 @@ var originWhitelist = [
   "http://localhost:4200",
   "https://accounts.google.com",
   "http://durropit.club",
+  "http://vendor.durropit.club",
 ];
 
 var corsOptions = {
@@ -60,10 +61,13 @@ app.use(expressHealthApi({ apiPath: "/health" }));
 
 mongoose.Promise = Promise;
 mongoose
-  .connect("mongodb://durropit:durropit123@ds157136.mlab.com:57136/durropit", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(
+    "mongodb+srv://sponge:sponge123@cluster0.xolhr.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  )
   .then(() => console.log("connected to the server"))
   .catch((err) => {
     console.log(err.stack);
@@ -75,6 +79,7 @@ require("./models/customer");
 require("./models/vendor");
 require("./models/product");
 require("./models/order");
+require("./models/schedule");
 require("./models/society");
 require("./config/passport");
 app.use(require("./routes"));

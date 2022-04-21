@@ -27,7 +27,6 @@ let VendorSchema = new Schema(
     email: {
       type: String,
       required: true,
-      unique: true,
     },
     email_is_verified: {
       type: Boolean,
@@ -41,24 +40,24 @@ let VendorSchema = new Schema(
       type: String,
       required: true,
     },
-    businessName: {
-      type: String,
-      required: false,
-    },
-    businessAddress: {
-      type: String,
-      required: false,
-    },
+    // businessName: {
+    //   type: String,
+    //   required: false,
+    // },
+    // businessAddress: {
+    //   type: String,
+    //   required: false,
+    // },
     image: {
       url: String,
       type: String,
     },
-    product: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Product",
-      },
-    ],
+    // product: [
+    //   {
+    //     type: Schema.Types.ObjectId,
+    //     ref: "Product",
+    //   },
+    // ],
     state: {
       type: Schema.Types.ObjectId,
       ref: "Location",
@@ -70,16 +69,30 @@ let VendorSchema = new Schema(
     mobile: {
       type: Number,
       required: false,
-      unique: true,
+
       maxlength: 10,
     },
-    paymentNumber: {
+    // paymentNumber: {
+    //   type: Number,
+    //   required: false,
+    //   maxlength: 10,
+    // },
+    // paymentType: {
+    //   type: Array,
+    //   required: false,
+    // },
+    whatsapp: {
       type: Number,
       required: false,
+
       maxlength: 10,
     },
-    paymentType: {
-      type: Array,
+    carName: {
+      type: String,
+      required: false,
+    },
+    carType: {
+      type: String,
       required: false,
     },
     isProfileCompleted: {
@@ -87,13 +100,13 @@ let VendorSchema = new Schema(
       required: true,
       default: false,
     },
-    roles: {
+    role: {
       type: String,
       default: "vendor",
     },
     permissions: {
       type: Array,
-      default: ["read"],
+      default: ["read", "modify"],
     },
     provider: {
       type: String,
@@ -129,7 +142,7 @@ VendorSchema.methods.generateAccessJWT = function () {
     {
       email: this.email,
       id: this._id,
-      roles: this.roles,
+      role: this.role,
       permissions: this.permissions,
     },
     accessPrivateKEY,
@@ -157,7 +170,7 @@ VendorSchema.methods.generateRefreshJWT = function () {
     {
       email: this.email,
       id: this._id,
-      roles: this.roles,
+      role: this.role,
       permissions: this.permissions,
     },
     refreshPrivateKEY,
@@ -180,7 +193,7 @@ VendorSchema.methods.toAuthJSON = function () {
     city: this.city,
     state: this.state,
     isProfileCompleted: this.isProfileCompleted,
-    roles: this.roles,
+    role: this.role,
     permissions: this.permissions,
     accessToken: accessToken,
     refreshToken: refreshToken,
@@ -195,16 +208,19 @@ VendorSchema.methods.toJSON = function () {
     firstName: this.firstName,
     lastName: this.lastName,
     image: this.image,
-    businessName: this.businessName,
-    businessAddress: this.businessAddress,
-    product: this.product,
+    // businessName: this.businessName,
+    // businessAddress: this.businessAddress,
+    // product: this.product,
     state: this.state,
     city: this.city,
     mobile: this.mobile,
-    paymentNumber: this.paymentNumber,
-    paymentType: this.paymentType,
+    // paymentNumber: this.paymentNumber,
+    // paymentType: this.paymentType,
+    whatsapp: this.whatsapp,
+    carName: this.carName,
+    carType: this.carType,
     isProfileCompleted: this.isProfileCompleted,
-    roles: this.roles,
+    role: this.role,
     permissions: this.permissions,
     provider: this.provider,
     active: this.active,

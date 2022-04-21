@@ -7,8 +7,8 @@ const { Schema } = mongoose,
   asyncRedis = require("async-redis"),
   client = asyncRedis.createClient(),
   fs = require("fs"),
-  path = require("path"),
-  Society = require("../models/society");
+  path = require("path");
+// Society = require("../models/society");
 
 client.on("error", function (err) {
   console.log("Error " + err);
@@ -30,16 +30,17 @@ let CustomerSchema = new Schema(
     email: {
       type: String,
       required: true,
-      unique: true,
+      sparse: true,
+      dropDups: true,
     },
     email_is_verified: {
       type: Boolean,
       default: false,
     },
-    password: {
-      type: String,
-      required: true,
-    },
+    // password: {
+    //   type: String,
+    //   required: false,
+    // },
     firstName: {
       type: String,
       required: true,
@@ -48,18 +49,22 @@ let CustomerSchema = new Schema(
       type: String,
       required: true,
     },
-    slug: {
+    image: {
+      url: String,
       type: String,
     },
-    society: Society.schema,
-    shippingAddress: {
-      apt_suite_etc: {
-        type: String,
-      },
-      wing: {
-        type: String,
-      },
-    },
+    // slug: {
+    //   type: String,
+    // },
+    // society: Society.schema,
+    // shippingAddress: {
+    //   apt_suite_etc: {
+    //     type: String,
+    //   },
+    //   wing: {
+    //     type: String,
+    //   },
+    // },
     state: {
       type: Schema.Types.ObjectId,
       ref: "Location",
@@ -70,19 +75,38 @@ let CustomerSchema = new Schema(
     },
     mobile: {
       type: Number,
-      required: true,
-      unique: true,
+      required: false,
       maxlength: 10,
     },
-    roles: {
+    whatsapp: {
+      type: Number,
+      required: false,
+      maxlength: 10,
+    },
+    carName: {
       type: String,
+      required: false,
+    },
+    carType: {
+      type: String,
+      required: false,
+    },
+    isProfileCompleted: {
+      type: Boolean,
       required: true,
+      default: false,
+    },
+    role: {
+      type: String,
       default: "customer",
     },
     permissions: {
       type: Array,
-      required: true,
-      default: ["read"],
+      default: ["create", "read", "modify"],
+    },
+    provider: {
+      type: String,
+      default: "SELF",
     },
     active: {
       type: Boolean,
@@ -94,7 +118,7 @@ let CustomerSchema = new Schema(
   }
 );
 
-CustomerSchema.plugin(passportLocalMongoose);
+// CustomerSchema.plugin(passportLocalMongoose);
 
 CustomerSchema.methods.setPassword = async (password, callback) => {
   // this.salt = crypto.randomBytes(16).toString('hex');
@@ -144,7 +168,7 @@ CustomerSchema.methods.generateAccessJWT = function () {
     {
       email: this.email,
       id: this._id,
-      roles: this.roles,
+      role: this.role,
       permissions: this.permissions,
     },
     accessPrivateKEY,
@@ -172,7 +196,7 @@ CustomerSchema.methods.generateRefreshJWT = function () {
     {
       email: this.email,
       id: this._id,
-      roles: this.roles,
+      role: this.role,
       permissions: this.permissions,
     },
     refreshPrivateKEY,
@@ -189,7 +213,14 @@ CustomerSchema.methods.toAuthJSON = function () {
   return {
     _id: this._id,
     email: this.email,
-    roles: this.roles,
+    firstName: this.firstName,
+    lastName: this.lastName,
+    carName: this.carName,
+    image: this.image,
+    city: this.city,
+    state: this.state,
+    isProfileCompleted: this.isProfileCompleted,
+    role: this.role,
     permissions: this.permissions,
     accessToken: accessToken,
     refreshToken: refreshToken,
@@ -203,14 +234,20 @@ CustomerSchema.methods.toJSON = function () {
     email_is_verified: this.email_is_verified,
     firstName: this.firstName,
     lastName: this.lastName,
+    image: this.image,
     slug: this.slug,
-    society: this.society,
-    shippingAddress: this.shippingAddress,
+    // society: this.society,
+    // shippingAddress: this.shippingAddress,
     state: this.state,
     city: this.city,
     mobile: this.mobile,
-    roles: this.roles,
+    whatsapp: this.whatsapp,
+    carName: this.carName,
+    carType: this.carType,
+    isProfileCompleted: this.isProfileCompleted,
+    role: this.role,
     permissions: this.permissions,
+    provider: this.provider,
     active: this.active,
   };
 };

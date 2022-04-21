@@ -172,9 +172,9 @@ Username: raun@gmail.com
 
 {
     "location": {
-        "name": "Udaipur",
+        "name": "Jodhpur",
         "parent": {
-            "_id": "5f0aca7d85689940fc316181",
+            "_id": "624c5bf3b914930264a28034",
             "name": "Rajasthan"
             }  
 	}
@@ -229,6 +229,14 @@ Username: vendor@gmail.com
 
 ### VENDOR ### PUB SUB
 GET http://localhost:3000/api/v1/vendor/pub
+Content-Type: application/json
+Authorization: Token eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhdW5AZ21haWwuY29tIiwiaWQiOiI1ZWVkMWE2ZjdmYzE3YjA4MjQwZTlkMDIiLCJyb2xlcyI6InZlbmRvciIsInBlcm1pc3Npb25zIjpbInJlYWQiXSwiaWF0IjoxNTkzODE2NjEwLCJleHAiOjE1OTM4MTY2MzAsImF1ZCI6IkNsaWVudF9JZGVudGl0eSIsImlzcyI6IkF1dGhvcml6YXRpb24vUmVzb3VyY2UvVGhpcyBzZXJ2ZXIiLCJzdWIiOiJyYXVuQGdtYWlsLmNvbSJ9.ucV35w2UMyHT8gZrl9yOrIeNwKabekPZn0_B_ZXYijxr_FYQ_A5Zh01euMFfZH_YkRNxhSfeT2KPR3Fazz7dQQ
+Username: raun@gmail.com
+
+### ------------------------------------------------------------------------------------------- ###
+
+### SCHEDULE ### 
+GET http://localhost:3000/api/v1/schedule?customer=6252bac01e06313ce4dd9fb7
 Content-Type: application/json
 Authorization: Token eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhdW5AZ21haWwuY29tIiwiaWQiOiI1ZWVkMWE2ZjdmYzE3YjA4MjQwZTlkMDIiLCJyb2xlcyI6InZlbmRvciIsInBlcm1pc3Npb25zIjpbInJlYWQiXSwiaWF0IjoxNTkzODE2NjEwLCJleHAiOjE1OTM4MTY2MzAsImF1ZCI6IkNsaWVudF9JZGVudGl0eSIsImlzcyI6IkF1dGhvcml6YXRpb24vUmVzb3VyY2UvVGhpcyBzZXJ2ZXIiLCJzdWIiOiJyYXVuQGdtYWlsLmNvbSJ9.ucV35w2UMyHT8gZrl9yOrIeNwKabekPZn0_B_ZXYijxr_FYQ_A5Zh01euMFfZH_YkRNxhSfeT2KPR3Fazz7dQQ
 Username: raun@gmail.com

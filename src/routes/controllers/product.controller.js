@@ -2,7 +2,10 @@ const mongoose = require("mongoose"),
   Product = require("../../models/product"),
   Vendor = require("../../models/vendor"),
   constants = require("../../constants/constants"),
-  ObjectID = require("mongoose").ObjectID;
+  { v4: uuidv4 } = require("uuid"),
+  AWS = require("aws-sdk");
+
+require("dotenv").config();
 
 exports.createProduct = async (req, res, next) => {
   const {
@@ -62,4 +65,54 @@ exports.updateProduct = (req, res, next) => {
       return res.json({ product: data });
     }
   );
+};
+
+/*
+ * Feedback:
+ * sends the feedback to the vendor
+ * for drawing their attention.
+ *
+ * author: Raunak Bhansali
+ */
+
+exports.uploadS3 = (req, res, next) => {
+  let s3bucket = new AWS.S3({
+    accessKeyId: process.env.IAM_USER_KEY,
+    secretAccessKey: process.env.IAM_USER_SECRET,
+  });
+
+  s3bucket.createBucket(() => {
+    var params = {
+      Bucket: process.env.BUCKET_NAME,
+      Key: "user/" + uuidv4() + ".jpg",
+      Body: req.file.buffer,
+    };
+    s3bucket.upload(params, (err, data) => {
+      if (err) {
+        next(err);
+      }
+      res.status(200).json(data);
+    });
+  });
+};
+
+exports.fetchImagesS3 = (req, res, next) => {
+  console.log("ENTEREDDDD IMAGES");
+  AWS.config.update({
+    accessKeyId: process.env.IAM_USER_KEY,
+    secretAccessKey: process.env.IAM_USER_SECRET,
+    region: process.env.BUCKET_REGION,
+  });
+  let s3bucket = new AWS.S3();
+  var params = {
+    Bucket: process.env.BUCKET_NAME + "",
+    Delimiter: "/",
+    Prefix: "user/",
+  };
+  s3bucket.listObjects(params, (err, data) => {
+    if (err) {
+      next(err);
+    }
+    console.log(data);
+  });
 };
