@@ -3,6 +3,7 @@ const Society = require("../../models/society");
 const passport = require("passport"),
   mongoose = require("mongoose"),
   Customer = mongoose.model("Customer"),
+  Vendor = mongoose.model("Vendor"),
   constants = require("../../constants/constants");
 
 require("dotenv").config();
@@ -12,21 +13,30 @@ exports.googleOAuthorization = (req, res, next) => {
     body: { customer },
   } = req;
 
-  Customer.findOne({ email: customer.email })
+  Vendor.findOne({ email: customer.email })
     .exec()
     .then((data) => {
       if (data) {
-        return res.status(200).json({ customer: data.toAuthJSON() });
+        return res.status(406).json({ customer: "Please login as a washer!" });
       } else {
-        const createCustomer = new Customer(customer);
-        createCustomer
-          .save()
-          .then(() => {
-            return res
-              .status(201)
-              .json({ customer: createCustomer.toAuthJSON() });
+        Customer.findOne({ email: customer.email })
+          .exec()
+          .then((data) => {
+            if (data) {
+              return res.status(200).json({ customer: data.toAuthJSON() });
+            } else {
+              const createCustomer = new Customer(customer);
+              createCustomer
+                .save()
+                .then(() => {
+                  return res
+                    .status(201)
+                    .json({ customer: createCustomer.toAuthJSON() });
+                })
+                .catch((err) => next(err));
+            }
           })
-          .catch((err) => next(err));
+          .catch((error) => next(error));
       }
     })
     .catch((error) => next(error));

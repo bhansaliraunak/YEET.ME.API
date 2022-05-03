@@ -1,29 +1,39 @@
-const Vendor = require("../../models/vendor"),
-  path = require("path"),
-  nodemailer = require("nodemailer"),
-  Email = require("email-templates");
+const nodemailer = require("nodemailer"),
+  mongoose = require("mongoose"),
+  Vendor = mongoose.model("Vendor"),
+  Customer = mongoose.model("Customer");
 
 exports.googleOAuthorization = (req, res, next) => {
   const {
     body: { vendor },
   } = req;
 
-  Vendor.findOne({ email: vendor.email })
+  Customer.findOne({ email: vendor.email })
     .exec()
     .then((data) => {
       if (data) {
-        return res.status(200).json({ vendor: data.toAuthJSON() });
+        return res.status(406).json({ vendor: "Please login as a user!" });
       } else {
-        const createVendor = new Vendor(vendor);
-        createVendor
-          .save()
-          .then(() => {
-            return res.status(201).json({ vendor: createVendor.toAuthJSON() });
+        Vendor.findOne({ email: vendor.email })
+          .exec()
+          .then((data) => {
+            if (data) {
+              return res.status(200).json({ vendor: data.toAuthJSON() });
+            } else {
+              const createVendor = new Vendor(vendor);
+              createVendor
+                .save()
+                .then(() => {
+                  return res
+                    .status(201)
+                    .json({ vendor: createVendor.toAuthJSON() });
+                })
+                .catch((err) => next(err));
+            }
           })
-          .catch((err) => next(err));
+          .catch((error) => next(error));
       }
-    })
-    .catch((error) => next(error));
+    });
 };
 
 exports.getAllVendors = (req, res, next) => {
