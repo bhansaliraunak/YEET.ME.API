@@ -1,6 +1,8 @@
 global.__base = __dirname;
 
 const express = require("express"),
+  https = require("https"),
+  fs = require("fs"),
   path = require("path"),
   bodyParser = require("body-parser"),
   session = require("express-session"),
@@ -22,7 +24,9 @@ var originWhitelist = [
   "http://localhost:4200",
   "https://accounts.google.com",
   "http://durropit.club",
+  "https://durropit.club",
   "http://vendor.durropit.club",
+  "https://api.durropit.club",
   "http://35.154.248.208",
 ];
 
@@ -58,7 +62,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(helmet());
-app.use(expressHealthApi({ apiPath: "/health" }));
+app.use(expressHealthApi({ apiPath: "/" }));
 
 mongoose.Promise = Promise;
 mongoose
@@ -109,4 +113,25 @@ app.use((err, req, res, next) => {
   });
 });
 
-server.listen(3000);
+server.listen(8080);
+
+// const privateKey = fs.readFileSync("cert/domain.key", "utf8");
+// const certificate = fs.readFileSync("cert/domain.crt", "utf8");
+
+const privateKey = fs.readFileSync("cert/private.key", "utf8");
+const certificate = fs.readFileSync("cert/certificate.crt", "utf8");
+const caBundle = fs.readFileSync("cert/ca_bundle.crt", "utf8");
+
+const credentials = {
+  key: privateKey,
+  cert: certificate,
+  ca: caBundle,
+  requestCert: true,
+  rejectUnauthorized: false,
+  //passphrase: "durropit",
+};
+
+app.use(express.static(__dirname + "/src"));
+const httpsServer = https.createServer(credentials, app);
+
+httpsServer.listen(8443, () => console.log("secure server on on port 8443"));
