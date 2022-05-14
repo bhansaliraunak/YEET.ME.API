@@ -28,6 +28,7 @@ var originWhitelist = [
   "http://vendor.durropit.club",
   "https://api.durropit.club",
   "http://35.154.248.208",
+
 ];
 
 var corsOptions = {

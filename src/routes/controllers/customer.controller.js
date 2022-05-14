@@ -12,7 +12,7 @@ exports.googleOAuthorization = (req, res, next) => {
   const {
     body: { customer },
   } = req;
-
+  
   Vendor.findOne({ email: customer.email })
     .exec()
     .then((data) => {
