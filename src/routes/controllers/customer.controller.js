@@ -1,5 +1,3 @@
-const Society = require("../../models/society");
-
 const passport = require("passport"),
   mongoose = require("mongoose"),
   Customer = mongoose.model("Customer"),
@@ -12,12 +10,14 @@ exports.googleOAuthorization = (req, res, next) => {
   const {
     body: { customer },
   } = req;
-  
+
   Vendor.findOne({ email: customer.email })
     .exec()
     .then((data) => {
       if (data) {
-        return res.status(406).json({ customer: "Please login as a washer!" });
+        return res.status(406).json({
+          customer: "Hey! Washer, I think you knock'd the wrong door...",
+        });
       } else {
         Customer.findOne({ email: customer.email })
           .exec()

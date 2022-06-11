@@ -1,7 +1,9 @@
-const Vendor = require("../../models/vendor");
-const Customer = require("../../models/customer");
+const Vendor = require("../../models/vendor"),
+  Customer = require("../../models/customer"),
+  CarWashSchedule = require("../../models/schedule"),
+  AWS = require("aws-sdk");
 
-var CarWashSchedule = require("../../models/schedule");
+require("dotenv").config();
 
 exports.createCarWashSchedule = async (req, res, next) => {
   const {
@@ -9,18 +11,47 @@ exports.createCarWashSchedule = async (req, res, next) => {
   } = req;
 
   const createSchedule = new CarWashSchedule(schedule);
+
+  // AWS.config.credentials = new AWS.Credentials(
+  //   process.env.AWS_ACCESS_KEY_ID,
+  //   process.env.AWS_SECRET_ACCESS_KEY,
+  //   (sessionToken = null)
+  // );
+
+  AWS.config.update({
+    profile: "default",
+    region: process.env.AWS_REGION,
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  });
+
+  let param = {
+    // Protocol: "SMS",
+    // TopicArn: "arn:aws:sns:ap-south-1:065524786363:Durropit",
+    // Endpoint: "+917447477330",
+    Message: "User requested",
+    PhoneNumber: "+917447477330",
+  };
+
+  const sns = new AWS.SNS({ apiVersion: "2010–03–31" })
+    .publish(param)
+    .promise();
+
+  sns
+    .then(async () => {})
+    .catch((err) => {
+      console.log(err);
+    });
+
   await Vendor.findById(schedule.vendor, (err, data) => {
     createSchedule.vendor = data;
   });
-
-  // await Customer.collection.dropIndex("email");
-  // await Customer.collection.createIndex("email");
-
   await Customer.findById(schedule.customer, (err, data) => {
     createSchedule.customer = data;
   });
 
-  console.log("Schedule: ", createSchedule);
+  // await Customer.collection.dropIndex("email");
+  // await Customer.collection.createIndex("email");
 
   return await createSchedule.save().then(() => {
     return res.status(201).json({ schedule: createSchedule });

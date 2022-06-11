@@ -12,7 +12,9 @@ exports.googleOAuthorization = (req, res, next) => {
     .exec()
     .then((data) => {
       if (data) {
-        return res.status(406).json({ vendor: "Please login as a user!" });
+        return res.status(406).json({
+          vendor: "Hey! Customer, I think you knock'd the wrong door...",
+        });
       } else {
         Vendor.findOne({ email: vendor.email })
           .exec()

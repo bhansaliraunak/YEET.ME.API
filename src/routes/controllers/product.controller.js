@@ -77,8 +77,8 @@ exports.updateProduct = (req, res, next) => {
 
 exports.uploadS3 = (req, res, next) => {
   let s3bucket = new AWS.S3({
-    accessKeyId: process.env.IAM_USER_KEY,
-    secretAccessKey: process.env.IAM_USER_SECRET,
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   });
 
   s3bucket.createBucket(() => {
@@ -99,9 +99,9 @@ exports.uploadS3 = (req, res, next) => {
 exports.fetchImagesS3 = (req, res, next) => {
   console.log("ENTEREDDDD IMAGES");
   AWS.config.update({
-    accessKeyId: process.env.IAM_USER_KEY,
-    secretAccessKey: process.env.IAM_USER_SECRET,
-    region: process.env.BUCKET_REGION,
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: process.env.AWS_REGION,
   });
   let s3bucket = new AWS.S3();
   var params = {

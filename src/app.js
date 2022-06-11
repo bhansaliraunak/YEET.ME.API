@@ -25,10 +25,9 @@ var originWhitelist = [
   "https://accounts.google.com",
   "http://durropit.club",
   "https://durropit.club",
-  "http://vendor.durropit.club",
+  "https://washer.durropit.club",
   "https://api.durropit.club",
   "http://35.154.248.208",
-
 ];
 
 var corsOptions = {
@@ -115,9 +114,6 @@ app.use((err, req, res, next) => {
 });
 
 server.listen(8080);
-
-// const privateKey = fs.readFileSync("cert/domain.key", "utf8");
-// const certificate = fs.readFileSync("cert/domain.crt", "utf8");
 
 const privateKey = fs.readFileSync("cert/private.key", "utf8");
 const certificate = fs.readFileSync("cert/certificate.crt", "utf8");
