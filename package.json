@@ -4,6 +4,7 @@
   "description": "A conference call implementation using WebRTC, Socket.io and Node.js.",
   "main": "src/app.js",
   "dependencies": {
+    "@aws-sdk/client-sns": "^3.107.0",
     "accesscontrol": "^2.2.1",
     "async-redis": "^1.1.7",
     "aws-sdk": "^2.1145.0",

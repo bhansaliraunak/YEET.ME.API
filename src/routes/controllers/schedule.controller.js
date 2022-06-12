@@ -1,7 +1,8 @@
 const Vendor = require("../../models/vendor"),
   Customer = require("../../models/customer"),
   CarWashSchedule = require("../../models/schedule"),
-  AWS = require("aws-sdk");
+  AWS = require("aws-sdk"),
+  { SNSClient, SetSMSAttributesCommand } = require("@aws-sdk/client-sns");
 
 require("dotenv").config();
 
@@ -18,6 +19,13 @@ exports.createCarWashSchedule = async (req, res, next) => {
   //   (sessionToken = null)
   // );
 
+  const snsClient = new SNSClient({
+    profile: "default",
+    region: process.env.AWS_REGION,
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  });
+
   AWS.config.update({
     profile: "default",
     region: process.env.AWS_REGION,
@@ -29,19 +37,35 @@ exports.createCarWashSchedule = async (req, res, next) => {
     // Protocol: "SMS",
     // TopicArn: "arn:aws:sns:ap-south-1:065524786363:Durropit",
     // Endpoint: "+917447477330",
-    Message: "User requested",
+    Message: "Durropit is slam bam hot chick bang!",
     PhoneNumber: "+917447477330",
+    attributes: {
+      /* required */
+      //DefaultSMSType: "Transactional" /* highest reliability */,
+      DefaultSMSType: "Promotional" /* lowest cost */,
+    },
   };
 
-  const sns = new AWS.SNS({ apiVersion: "2010–03–31" })
-    .publish(param)
-    .promise();
+  const run = async () => {
+    try {
+      const data = await snsClient.send(new SetSMSAttributesCommand(param));
+      console.log("Success.", data);
+      return data; // For unit tests.
+    } catch (err) {
+      console.log("Error", err.stack);
+    }
+  };
+  run();
 
-  sns
-    .then(async () => {})
-    .catch((err) => {
-      console.log(err);
-    });
+  // const sns = new AWS.SNS({ apiVersion: "2010–03–31" })
+  //   .publish(param)
+  //   .promise();
+
+  // sns
+  //   .then(() => {})
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
 
   await Vendor.findById(schedule.vendor, (err, data) => {
     createSchedule.vendor = data;
