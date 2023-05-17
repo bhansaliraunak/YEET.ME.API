@@ -12,6 +12,13 @@ router.post(
   auth.optional,
   customer_controller.googleOAuthorization
 );
+
+router.post(
+  "/mobileAuth",
+  auth.optional,
+  customer_controller.otpBasedAuthorization
+);
+
 router.get("/", auth.required, customer_controller.getAllCustomers);
 
 router.post("/login", auth.optional, customer_controller.login);
