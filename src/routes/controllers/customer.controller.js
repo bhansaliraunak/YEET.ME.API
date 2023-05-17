@@ -2,7 +2,11 @@ const passport = require("passport"),
   mongoose = require("mongoose"),
   Customer = mongoose.model("Customer"),
   Vendor = mongoose.model("Vendor"),
-  constants = require("../../constants/constants");
+  constants = require("../../constants/constants"),
+  Amplify = require("aws-amplify"),
+  Auth = require("@aws-amplify/auth"),
+  path = require("path"),
+  awsconfig = path.join(__dirname, "aws-exports.js");
 
 require("dotenv").config();
 
@@ -20,6 +24,42 @@ exports.googleOAuthorization = (req, res, next) => {
         });
       } else {
         Customer.findOne({ email: customer.email })
+          .exec()
+          .then((data) => {
+            if (data) {
+              return res.status(200).json({ customer: data.toAuthJSON() });
+            } else {
+              const createCustomer = new Customer(customer);
+              createCustomer
+                .save()
+                .then(() => {
+                  return res
+                    .status(201)
+                    .json({ customer: createCustomer.toAuthJSON() });
+                })
+                .catch((err) => next(err));
+            }
+          })
+          .catch((error) => next(error));
+      }
+    })
+    .catch((error) => next(error));
+};
+
+exports.otpBasedAuthorization = (req, res, next) => {
+  const {
+    body: { customer },
+  } = req;
+
+  Vendor.findOne({ mobile: parseInt(customer.mobile) })
+    .exec()
+    .then((data) => {
+      if (data) {
+        return res.status(406).json({
+          customer: "Hey! Washer, I think you knock'd the wrong door...",
+        });
+      } else {
+        Customer.findOne({ mobile: parseInt(customer.mobile) })
           .exec()
           .then((data) => {
             if (data) {
