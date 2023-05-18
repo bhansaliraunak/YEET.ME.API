@@ -122,7 +122,7 @@ exports.updateSchedule = async (req, res, next) => {
   return await CarWashSchedule.findByIdAndUpdate(
     req.params.id,
     schedule,
-    { upsert: true },
+    { new: true },
     (err, data) => {
       if (err) {
         return next(err);
