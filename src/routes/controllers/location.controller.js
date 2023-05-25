@@ -1,5 +1,4 @@
-const mongoose = require("mongoose"),
-  Location = require("../../models/location");
+const Location = require("../../models/location");
 
 exports.createLocation = (req, res, next) => {
   const {

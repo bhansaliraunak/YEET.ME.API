@@ -3,7 +3,6 @@ const Vendor = require("../../models/vendor"),
   CarWashSchedule = require("../../models/schedule"),
   AWS = require("aws-sdk"),
   { SNSClient, SetSMSAttributesCommand } = require("@aws-sdk/client-sns");
-const mongoose = require("mongoose");
 
 require("dotenv").config();
 
@@ -83,7 +82,6 @@ exports.createCarWashSchedule = async (req, res, next) => {
 };
 
 exports.getSchedulesForVendor = (req, res, next) => {
-  console.log("Vendor Request" + req.query.vendor);
   return CarWashSchedule.find(
     {
       "vendor._id": req.query.vendor,

@@ -1,8 +1,6 @@
-const jwt = require("express-jwt"),
-  jwtoken = require("jsonwebtoken"),
+const jwtoken = require("jsonwebtoken"),
   asyncRedis = require("async-redis"),
   client = asyncRedis.createClient(),
-  request = require("request"),
   fs = require("fs"),
   path = require("path");
 

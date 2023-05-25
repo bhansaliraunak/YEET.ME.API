@@ -1,6 +1,4 @@
-const mongoose = require("mongoose"),
-  Product = require("../../models/product"),
-  Vendor = require("../../models/vendor"),
+const Product = require("../../models/product"),
   constants = require("../../constants/constants"),
   { v4: uuidv4 } = require("uuid"),
   AWS = require("aws-sdk");

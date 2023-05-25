@@ -1,8 +1,6 @@
 global.__base = __dirname;
 
 const express = require("express"),
-  https = require("https"),
-  fs = require("fs"),
   path = require("path"),
   bodyParser = require("body-parser"),
   session = require("express-session"),
@@ -15,19 +13,14 @@ const express = require("express"),
   app = express(),
   server = require("http").Server(app),
   favicon = require("serve-favicon"),
-  helmet = require("helmet"),
-  expressHealthApi = require("express-health-api");
+  helmet = require("helmet");
 
 mongoose.promise = global.Promise;
 
 var originWhitelist = [
   "http://localhost:4200",
   "https://accounts.google.com",
-  "http://durropit.club",
-  "https://durropit.club",
-  "https://washer.durropit.club",
-  "https://api.durropit.club",
-  "http://35.154.248.208",
+  "http://52.66.206.209",
 ];
 
 var corsOptions = {
@@ -62,7 +55,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(helmet());
-app.use(expressHealthApi({ apiPath: "/" }));
 
 mongoose.Promise = Promise;
 mongoose
@@ -113,22 +105,22 @@ app.use((err, req, res, next) => {
   });
 });
 
-server.listen(8080);
+server.listen(80);
 
-const privateKey = fs.readFileSync("cert/private.key", "utf8");
-const certificate = fs.readFileSync("cert/certificate.crt", "utf8");
-const caBundle = fs.readFileSync("cert/ca_bundle.crt", "utf8");
+// const privateKey = fs.readFileSync("cert/private.key", "utf8");
+// const certificate = fs.readFileSync("cert/certificate.crt", "utf8");
+// const caBundle = fs.readFileSync("cert/ca_bundle.crt", "utf8");
 
-const credentials = {
-  key: privateKey,
-  cert: certificate,
-  ca: caBundle,
-  requestCert: true,
-  rejectUnauthorized: false,
-  //passphrase: "durropit",
-};
+// const credentials = {
+//   key: privateKey,
+//   cert: certificate,
+//   ca: caBundle,
+//   requestCert: true,
+//   rejectUnauthorized: false,
+//   //passphrase: "durropit",
+// };
 
-app.use(express.static(__dirname + "/src"));
-const httpsServer = https.createServer(credentials, app);
+// app.use(express.static(__dirname + "/src"));
+// const httpsServer = https.createServer(credentials, app);
 
-httpsServer.listen(8443, () => console.log("secure server on on port 8443"));
+// httpsServer.listen(8443, () => console.log("secure server on on port 8443"));

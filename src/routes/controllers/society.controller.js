@@ -1,9 +1,5 @@
-const mongoose = require("mongoose");
-
 var Society = require("../../models/society"),
-  url = require("url"),
-  ObjectID = require("mongoose").Types.ObjectId,
-  request = require("request");
+  ObjectID = require("mongoose").Types.ObjectId;
 
 exports.createSociety = (req, res, next) => {
   const {

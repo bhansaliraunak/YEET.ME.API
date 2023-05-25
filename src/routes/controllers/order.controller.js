@@ -1,12 +1,7 @@
-const mongoose = require("mongoose");
 const Vendor = require("../../models/vendor");
 const Customer = require("../../models/customer");
 const Product = require("../../models/product");
-
-var Order = require("../../models/order"),
-  url = require("url"),
-  ObjectID = require("mongoose").ObjectID,
-  request = require("request");
+const Order = require("../../models/order");
 
 exports.createOrder = async (req, res, next) => {
   const {
