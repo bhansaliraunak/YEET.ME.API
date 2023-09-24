@@ -21,6 +21,7 @@ var originWhitelist = [
   "http://localhost:4200",
   "https://accounts.google.com",
   "http://52.66.206.209",
+  "https://durropit.in",
 ];
 
 var corsOptions = {
@@ -95,6 +96,8 @@ if (!isProduction) {
   });
 }
 
+app.use("/health", require("./routes/healthcheck"));
+
 app.use((err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || "error";
@@ -105,7 +108,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-server.listen(80);
+server.listen(3000);
 
 // const privateKey = fs.readFileSync("cert/private.key", "utf8");
 // const certificate = fs.readFileSync("cert/certificate.crt", "utf8");

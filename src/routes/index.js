@@ -7,6 +7,7 @@ router.use("/api/v1/schedule", require("./schedule"));
 router.use("/api/v1/product", require("./product"));
 router.use("/api/v1/society", require("./society"));
 router.use("/api/v1/location", require("./location"));
+router.use("/health", require("./healthcheck"));
 
 router.all("*", (req, res, next) => {
   /*
