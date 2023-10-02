@@ -49,6 +49,10 @@ let CustomerSchema = new Schema(
       type: String,
       required: true,
     },
+    address: {
+      type: String,
+      required: false,
+    },
     image: {
       url: String,
       type: String,
@@ -88,6 +92,10 @@ let CustomerSchema = new Schema(
       required: false,
     },
     carType: {
+      type: String,
+      required: false,
+    },
+    carNumber: {
       type: String,
       required: false,
     },
@@ -215,6 +223,7 @@ CustomerSchema.methods.toAuthJSON = function () {
     email: this.email,
     firstName: this.firstName,
     lastName: this.lastName,
+    address: this.address,
     carName: this.carName,
     image: this.image,
     city: this.city,
@@ -236,6 +245,7 @@ CustomerSchema.methods.toJSON = function () {
     lastName: this.lastName,
     image: this.image,
     slug: this.slug,
+    address: this.address,
     // society: this.society,
     // shippingAddress: this.shippingAddress,
     state: this.state,
@@ -243,6 +253,7 @@ CustomerSchema.methods.toJSON = function () {
     mobile: this.mobile,
     whatsapp: this.whatsapp,
     carName: this.carName,
+    carNumber: this.carNumber,
     carType: this.carType,
     isProfileCompleted: this.isProfileCompleted,
     role: this.role,

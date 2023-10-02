@@ -77,8 +77,6 @@ exports.createCarWashSchedule = async (req, res, next) => {
   return await createSchedule.save().then(() => {
     return res.status(201).json({ schedule: createSchedule });
   });
-
-  return res.status(201);
 };
 
 exports.getSchedulesForVendor = (req, res, next) => {
