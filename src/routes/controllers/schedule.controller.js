@@ -23,9 +23,9 @@ exports.createCarWashSchedule = async (request, response, next) => {
   CarWashSchedule.find(
     {
       customer: schedule.customer,
-      start_time: schedule.start_time,
-      start_date: schedule.start.split("T")[0],
       $and: [
+        { start_time: schedule.start_time },
+        { start_date: schedule.start.split("T")[0] },
         { status: { $exists: true } }, // Check if 'status.name' exists
         { "status.name": { $nin: ["CANCELLED"] } }, // Exclude "CANCELLED"
       ],
@@ -55,6 +55,10 @@ exports.createCarWashSchedule = async (request, response, next) => {
             response
               .status(404)
               .json({ data: "Cannot Schedule Past Seven Days" });
+          } else if (isDateLessThanToday(schedule.start.split("T")[0])) {
+            response
+              .status(404)
+              .json({ data: "Cannot Schedule To Prior Days" });
           } else {
             // AWS.config.credentials = new AWS.Credentials(
             //   process.env.AWS_ACCESS_KEY_ID,
@@ -153,6 +157,14 @@ function isDateGreaterThanSevenDays(dateString) {
 
   // Compare the target date with seven days from now
   return targetDate > sevenDaysFromNow;
+}
+
+function isDateLessThanToday(dateString) {
+  const currentDate = new Date();
+  const targetDate = new Date(dateString);
+
+  // Compare the target date with seven days from now
+  return targetDate < currentDate;
 }
 
 exports.getSchedulesForVendor = (req, res, next) => {
