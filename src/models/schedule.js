@@ -9,12 +9,18 @@ let CarWashScheduleSchema = new Schema(
     slug: {
       type: String,
     },
-    customer: Customer.schema,
+    customer: {
+      type: Schema.Types.ObjectId,
+      ref: "Customer", // Reference the Customer model
+    },
     vendor: Vendor.schema,
     start: {
       type: String,
     },
     start_time: {
+      type: String,
+    },
+    start_date: {
       type: String,
     },
     title: {

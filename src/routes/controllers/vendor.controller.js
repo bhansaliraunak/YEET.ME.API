@@ -143,10 +143,21 @@ exports.sendFeedback = async (req, res, next) => {
   };
 
   try {
-    const res = await AWS_SES.sendEmail(params).promise();
-    console.log("Email sent successfully");
+    await AWS_SES.sendEmail(params, function (err, info) {
+      if (err) {
+        return res.status(400).json({
+          status: false,
+        });
+      }
+      return res.status(200).json({
+        status: true,
+      });
+    });
   } catch (error) {
     console.error(error);
+    return res.status(500).json({
+      status: false,
+    });
   }
 
   // console.log("ENTEREEEDDD FEEDBACK!!!", vendor);

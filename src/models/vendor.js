@@ -100,6 +100,11 @@ let VendorSchema = new Schema(
       required: true,
       default: false,
     },
+    isRegistrationCompleted: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
     role: {
       type: String,
       default: "vendor",
@@ -193,6 +198,7 @@ VendorSchema.methods.toAuthJSON = function () {
     city: this.city,
     state: this.state,
     isProfileCompleted: this.isProfileCompleted,
+    isRegistrationCompleted: this.isRegistrationCompleted,
     role: this.role,
     permissions: this.permissions,
     accessToken: accessToken,
@@ -220,6 +226,7 @@ VendorSchema.methods.toJSON = function () {
     carName: this.carName,
     carType: this.carType,
     isProfileCompleted: this.isProfileCompleted,
+    isRegistrationCompleted: this.isRegistrationCompleted,
     role: this.role,
     permissions: this.permissions,
     provider: this.provider,
