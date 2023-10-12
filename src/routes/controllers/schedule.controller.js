@@ -115,7 +115,10 @@ exports.getSchedulesForVendor = (req, res, next) => {
   return CarWashSchedule.find(
     {
       "vendor._id": req.query.vendor,
-      "status.name": { $nin: ["DECLINED"] },
+      $and: [
+        { status: { $exists: true } }, // Check if 'status.name' exists
+        { "status.name": { $nin: ["DECLINED"] } }, // Exclude "CANCELLED"
+      ],
     },
     (err, data) => {
       if (err) {
@@ -138,17 +141,17 @@ exports.getSchedulesForVendor = (req, res, next) => {
 };
 
 exports.getSchedulesForCustomer = (req, res, next) => {
-  const oneDayAgo = new Date();
-  oneDayAgo.setDate(oneDayAgo.getDate() - 1);
-
   return CarWashSchedule.find(
     {
       customer: req.query.customer,
-      "status.name": { $nin: ["CANCELLED"] },
+      $and: [
+        { status: { $exists: true } }, // Check if 'status.name' exists
+        { "status.name": { $nin: ["CANCELLED"] } }, // Exclude "CANCELLED"
+      ],
     },
     (err, data) => {
       if (err) {
-        console.log("ERROR :: ", err);
+        return res.status(200).json({ data: [] });
       } else {
         CarWashSchedule.populate(
           data,
