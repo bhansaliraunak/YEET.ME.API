@@ -46,40 +46,44 @@ exports.googleOAuthorization = (req, res, next) => {
     .catch((error) => next(error));
 };
 
-exports.otpBasedAuthorization = (req, res, next) => {
-  const {
-    body: { customer },
-  } = req;
+exports.otpBasedAuthorization = async (req, res, next) => {
+  try {
+    const {
+      body: { customer },
+    } = req;
 
-  Vendor.findOne({ mobile: parseInt(customer.mobile) })
-    .exec()
-    .then((data) => {
-      if (data) {
-        return res.status(406).json({
-          customer: "Hey! Washer, I think you knock'd the wrong door...",
-        });
-      } else {
-        Customer.findOne({ mobile: parseInt(customer.mobile) })
-          .exec()
-          .then((data) => {
-            if (data) {
-              return res.status(200).json({ customer: data.toAuthJSON() });
-            } else {
-              const createCustomer = new Customer(customer);
-              createCustomer
-                .save()
-                .then(() => {
-                  return res
-                    .status(201)
-                    .json({ customer: createCustomer.toAuthJSON() });
-                })
-                .catch((err) => next(err));
-            }
-          })
-          .catch((error) => next(error));
-      }
-    })
-    .catch((error) => next(error));
+    // Check if the customer exists as a Vendor
+    const vendor = await Vendor.findOne({
+      mobile: parseInt(customer.mobile),
+    }).exec();
+    if (vendor) {
+      return res.status(406).json({
+        washer: "Hey! Washer, I think you knock'd the wrong door...",
+      });
+    }
+
+    // Check if the customer exists as a Customer
+    const existingCustomer = await Customer.findOne({
+      mobile: parseInt(customer.mobile),
+    }).exec();
+    if (existingCustomer) {
+      return res.status(200).json({ customer: existingCustomer.toAuthJSON() });
+    }
+
+    // Check if the customer has an email
+    if (!customer.email || !customer.lastName || !customer.firstName) {
+      return res.status(400).json({
+        customer: "Hey!" + " " + "Welcome to Durropit...",
+      });
+    } else {
+      // If the customer doesn't exist, create a new Customer
+      const newCustomer = new Customer(customer);
+      await newCustomer.save();
+      return res.status(201).json({ customer: newCustomer.toAuthJSON() });
+    }
+  } catch (error) {
+    next(error);
+  }
 };
 
 exports.register = async (req, res, next) => {

@@ -162,9 +162,13 @@ function isDateGreaterThanSevenDays(dateString) {
 function isDateLessThanToday(dateString) {
   const currentDate = new Date();
   const targetDate = new Date(dateString);
+  const yesterday = new Date();
+
+  // Add seven days to the current date
+  yesterday.setDate(currentDate.getDate() - 1);
 
   // Compare the target date with seven days from now
-  return targetDate < currentDate;
+  return targetDate < yesterday;
 }
 
 exports.getSchedulesForVendor = (req, res, next) => {
