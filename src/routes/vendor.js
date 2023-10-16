@@ -10,6 +10,8 @@ router.post(
 
 router.get("/", auth.required, vendor_controller.getAllVendors);
 
+router.get("/ids", auth.required, vendor_controller.getAllVendorIds);
+
 router.get("/:id", auth.required, vendor_controller.getVendorById);
 
 router.put("/update/:id", auth.required, vendor_controller.updateVendor);

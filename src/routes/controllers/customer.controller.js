@@ -54,7 +54,7 @@ exports.otpBasedAuthorization = async (req, res, next) => {
 
     // Check if the customer exists as a Vendor
     const vendor = await Vendor.findOne({
-      mobile: parseInt(customer.mobile),
+      $or: [{ mobile: parseInt(customer.mobile) }, { email: customer.email }],
     }).exec();
     if (vendor) {
       return res.status(406).json({
@@ -162,7 +162,6 @@ exports.login = (req, res, next) => {
     { session: false },
     (err, passportCustomer, info) => {
       if (err) {
-        console.log("Info", info);
         return next(err);
       }
       if (passportCustomer) {

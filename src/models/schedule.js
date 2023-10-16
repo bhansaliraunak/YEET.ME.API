@@ -13,7 +13,12 @@ let CarWashScheduleSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Customer", // Reference the Customer model
     },
-    vendor: Vendor.schema,
+    vendors: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Vendor", // Reference the Customer model
+      },
+    ],
     start: {
       type: String,
     },

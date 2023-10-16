@@ -4,39 +4,42 @@ const nodemailer = require("nodemailer"),
   Customer = mongoose.model("Customer"),
   AWS = require("aws-sdk");
 
-exports.googleOAuthorization = (req, res, next) => {
-  const {
-    body: { vendor },
-  } = req;
+exports.googleOAuthorization = async (req, res, next) => {
+  try {
+    const {
+      body: { vendor },
+    } = req;
 
-  Customer.findOne({ email: vendor.email })
-    .exec()
-    .then((data) => {
-      if (data) {
-        return res.status(406).json({
-          vendor: "Hey! Customer, I think you knock'd the wrong door...",
-        });
-      } else {
-        Vendor.findOne({ email: vendor.email })
-          .exec()
-          .then((data) => {
-            if (data) {
-              return res.status(200).json({ vendor: data.toAuthJSON() });
-            } else {
-              const createVendor = new Vendor(vendor);
-              createVendor
-                .save()
-                .then(() => {
-                  return res
-                    .status(201)
-                    .json({ vendor: createVendor.toAuthJSON() });
-                })
-                .catch((err) => next(err));
-            }
-          })
-          .catch((error) => next(error));
-      }
-    });
+    // Check if the vendor has an email
+    if (!vendor.email) {
+      return res
+        .status(400)
+        .json({ error: "Email is required for vendor registration." });
+    }
+
+    // Check if the vendor exists as a Customer
+    const existingCustomer = await Customer.findOne({
+      email: vendor.email,
+    }).exec();
+    if (existingCustomer) {
+      return res.status(406).json({
+        vendor: "Hey! Customer, I think you knock'd the wrong door...",
+      });
+    }
+
+    // Check if the vendor exists as a Vendor
+    const existingVendor = await Vendor.findOne({ email: vendor.email }).exec();
+    if (existingVendor) {
+      return res.status(200).json({ vendor: existingVendor.toAuthJSON() });
+    }
+
+    // If the vendor doesn't exist, create a new Vendor
+    const newVendor = new Vendor(vendor);
+    await newVendor.save();
+    return res.status(201).json({ vendor: newVendor.toAuthJSON() });
+  } catch (error) {
+    next(error);
+  }
 };
 
 exports.getAllVendors = (req, res, next) => {
@@ -46,6 +49,21 @@ exports.getAllVendors = (req, res, next) => {
     }
     return res.json({ vendors: data });
   });
+};
+
+exports.getAllVendorIds = (req, res, next) => {
+  Vendor.distinct("_id")
+    .exec()
+    .then((data) => {
+      if (!data) {
+        return res.status(400).json({ error: "No vendors found." });
+      }
+      const vendorIds = data.map(String); // Convert ObjectIds to strings
+      return res.json({ vendors: vendorIds });
+    })
+    .catch((error) => {
+      next(error);
+    });
 };
 
 exports.getVendorById = (req, res, next) => {
@@ -58,31 +76,46 @@ exports.getVendorById = (req, res, next) => {
 };
 
 exports.updateVendor = (req, res, next) => {
-  const {
-    body: { vendor },
-  } = req;
-
-  console.log("VENDOR::", vendor);
+  const { vendor } = req.body;
 
   if (!vendor.email) {
-    return res.status(422).json({
-      errors: {
-        email: "is required",
-      },
-    });
+    return res
+      .status(400)
+      .json({ error: "Email is required for vendor registration." });
   }
 
-  return Vendor.findByIdAndUpdate(
-    req.params.id,
-    vendor,
-    { new: true },
-    (err, data) => {
-      if (err) {
-        return next(err);
+  Vendor.findByIdAndUpdate(req.params.id, vendor, { new: true })
+    .exec()
+    .then((data) => {
+      if (!data) {
+        return res.status(404).json({ error: "Vendor not found." });
       }
       return res.json({ vendor: data });
-    }
-  );
+    })
+    .catch((error) => {
+      const customError = new Error();
+
+      if (
+        error &&
+        error.codeName &&
+        error.keyValue &&
+        error.keyValue.whatsapp &&
+        error.codeName === "DuplicateKey"
+      ) {
+        customError.status = 409; // Set the status code
+        customError.message = "Entered Whatsapp Already Exist!"; // Set the status code
+      } else if (
+        error &&
+        error.codeName &&
+        error.keyValue &&
+        error.keyValue.mobile &&
+        error.codeName === "DuplicateKey"
+      ) {
+        customError.status = 409; // Set the status code
+        customError.message = "Entered Mobile Already Exist!"; // Set the status code
+      }
+      next(customError);
+    });
 };
 
 /*
