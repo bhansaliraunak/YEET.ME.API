@@ -170,7 +170,7 @@ exports.sendFeedback = async (req, res, next) => {
       },
       Subject: {
         Charset: "UTF-8",
-        Data: "[DURROPIT]: Feedback/Concern/Complaint",
+        Data: "Feedback/Concern/Complaint",
       },
     },
   };
